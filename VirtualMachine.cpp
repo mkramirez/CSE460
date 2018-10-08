@@ -59,50 +59,127 @@ void VirtualMachine::run(std::fstream& objectCode, std::fstream& in, std::fstrea
         if (opcode == 0) { /* load and loadi */
             if (i) {
                 r[rd] = constant;
-            } else {
+            }
+            else {
                 r[rd] = mem[addr];
                 clock += 3;
             }
-        } else if (opcode == 1) { /* store */
+        }
+        else if (opcode == 1) { /* store */
             mem[addr] = r[rd];
             clock += 3;
-        } else if (opcode == 2) { /* add and addi */
+        }
+        else if (opcode == 2) { /* add and addi */
             if (i) {
                 r[rd] = r[rd] + constant;
-            } else {
+            }
+            else {
                 r[rd] = r[rd] + r[rs];
             }
             // set CARRY
             if (r[rd] & 0x10000) {
                 sr |= 01;
-            } else {
+            }
+            else {
                 sr &= 0xe;
             }
             // sign extend
             if (r[rd] & 0x8000) {
                 r[rd] |= 0xffff0000;
-            } else {
+            }
+            else {
                 r[rd] &= 0xffff;
             }
-        } else if (opcode == 3) { //addc and addci
+        }
+        else if (opcode == 3) { //addc and addci
             if (i) {
                 r[rd] = r[rd] + constant;
-            } else {
+            }
+            else {
                 r[rd] = r[rd] + r[rs];
             }
             // set CARRY
             if (r[rd] & 0x10000) {
                 sr |= 01;
-            } else {
+            }
+            else {
                 sr &= 0xe;
             }
             // sign extend
             if (r[rd] & 0x8000) {
                 r[rd] |= 0xffff0000;
-            } else {
+            }
+            else {
                 r[rd] &= 0xffff;
             }
-        } else {
+        }
+        else if (opcode == 4) { //sub and subi
+            if (i) {
+                r[rd] = r[rd] - constant;
+            }
+            else {
+                r[rd] = r[rd] - r[rs];
+            }
+            // set CARRY
+            if (r[rd] & 0x10000) {
+                sr |= 01;
+            }
+            else {
+                sr &= 0xe;
+            }
+            // sign extend
+            if (r[rd] & 0x8000) {
+                r[rd] |= 0xffff0000;
+            }
+            else {
+                r[rd] &= 0xffff;
+            }
+        }
+        else if (opcode == 5) { //subc and subci
+            if (i) {
+                r[rd] = r[rd] - constant;
+            }
+            else {
+                r[rd] = r[rd] - r[rs];
+            }
+            // set CARRY
+            if (r[rd] & 0x10000) {
+                sr |= 01;
+            }
+            else {
+                sr &= 0xe;
+            }
+            // sign extend
+            if (r[rd] & 0x8000) {
+                r[rd] |= 0xffff0000;
+            }
+            else {
+                r[rd] &= 0xffff;
+            }
+        }
+        else if (opcode == 6) { //and and andi
+            if (i) {
+                r[rd] = r[rd] - constant;
+            }
+            else {
+                r[rd] = r[rd] - r[rs];
+            }
+            // set CARRY
+            if (r[rd] & 0x10000) {
+                sr |= 01;
+            }
+            else {
+                sr &= 0xe;
+            }
+            // sign extend
+            if (r[rd] & 0x8000) {
+                r[rd] |= 0xffff0000;
+            }
+            else {
+                r[rd] &= 0xffff;
+            }
+        }
+        else {
             std::cout << "Bad opcode = " << opcode << std::endl;
             exit(3);
         }
