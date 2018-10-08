@@ -14,19 +14,21 @@ public:
 
 class Assembler {
 public:
-    typedef int (Assembler::*FP)(std::istringstream &);
+    typedef int (Assembler::*FP)(std::istringstream &); //function pointer
     std::map<std::string, FP> jumpTable;
-    Assembler();
+    Assembler();//constructor
 
+
+    int assemble(std::fstream&, std::fstream&);
 
 private:
-    int assemble(std::fstream&, std::fstream&);
     int load(std::istringstream &);
     int loadi(std::istringstream &);
     int store(std::istringstream &);
     int add(std::istringstream &);
     int addi(std::istringstream &);
     int addc(std::istringstream &);
+    int addci(std::istringstream &);
     int sub(std::istringstream &);
     int subi(std::istringstream &);
     int subc(std::istringstream &);

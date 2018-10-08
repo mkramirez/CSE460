@@ -11,6 +11,7 @@ Assembler::Assembler() {
     jumpTable["add"] = &Assembler::add;
     jumpTable["addi"] = &Assembler::addi;
     jumpTable["addc"] = &Assembler::addc;
+    jumpTable["addci"] = &Assembler::addci;
     jumpTable["sub"] = &Assembler::sub;
     jumpTable["subi"] = &Assembler::subi;
     jumpTable["subc"] = &Assembler::subc;
@@ -113,7 +114,7 @@ int Assembler::store(std::istringstream & str) {
         return -1;
     }
     int inst = 1;
-    inst = inst << 11 | rd << 9 | addr;
+    inst = inst << 11 | rd << 9 | 1 << 8 | addr;
     return inst;
 }
 
@@ -131,119 +132,357 @@ int Assembler::add(std::istringstream & str) {
     return inst;
 }
 
-int Assembler::addi(std::istringstream &) {
-    return 0;
+int Assembler::addi(std::istringstream & str) {
+    int rd, constant;
+    str >> rd >> constant;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    if (constant < -128 || constant > 127) {
+        return -1;
+    }
+    int inst = 2;
+    inst = inst << 11 || rd << 9 | 1 << 8 || (0x000000ff & constant);
+    return inst;
 }
 
-int Assembler::addc(std::istringstream &) {
-    return 0;
+int Assembler::addc(std::istringstream & str) {
+    int rd, rs;
+    str >> rd >> rs;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    if (rs < 0 || rs > 3) {
+        return -1;
+    }
+    int inst = 3;
+    inst = inst << 11 || rd << 9 | rs << 6;
+    return inst;
 }
 
-int Assembler::sub(std::istringstream &) {
-    return 0;
+int Assembler::addci(std::istringstream & str) {
+    int rd, constant;
+    str >> rd >> constant;
+    if (rd < 0 || rd > 3){
+        return -1;
+    }
+    if (constant < -128 || constant > 127) {
+        return -1;
+    }
+    int inst = 3;
+    inst = inst << 11 | rd << 9 | 1 << 8 | (0x000000ff & constant);
+    return inst;
 }
 
-int Assembler::subi(std::istringstream &) {
-    return 0;
+int Assembler::sub(std::istringstream & str) {
+    int rd, rs;
+    str >> rd >> rs;
+    if (rd < 0 || rd > 0) {
+        return -1;
+    }
+    if (rs < 0 || rs > 3) {
+        return -1;
+    }
+    int inst = 4;
+    inst = inst << 11 || rd << 9 | rs << 6;
+    return inst;
 }
 
-int Assembler::subc(std::istringstream &) {
-    return 0;
+int Assembler::subi(std::istringstream & str) {
+    int rd, constant;
+    str >> rd >> constant;
+    if (rd < 0 || rd > 0) {
+        return -1;
+    }
+    if (constant < -128 || constant > 127) {
+        return -1;
+    }
+    int inst = 4;
+    inst = inst << 11 || rd << 9 | 1 << 8 | (0x000000ff & constant);
+    return inst;
 }
 
-int Assembler::subci(std::istringstream &) {
-    return 0;
+int Assembler::subc(std::istringstream & str) {
+    int rd, rs;
+    str >> rd >> rs;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    if (rs < 0 || rs > 3) {
+        return -1;
+    }
+    int inst = 5;
+    inst = inst << 11 | rd << 9 | rs << 6;
+    return inst;
 }
 
-int Assembler::ㅅand(std::istringstream &) {
-    return 0;
+int Assembler::subci(std::istringstream & str) {
+    int rd, constant;
+    str >> rd >> constant;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    if (constant < -128 || constant > 127) {
+        return -1;
+    }
+    int inst = 5;
+    inst = inst << 11 | rd << 9 | 1 << 8 | (0x000000ff & constant);
+    return inst;
+
 }
 
-int Assembler::andi(std::istringstream &) {
-    return 0;
+int Assembler::ㅅand(std::istringstream & str) {
+    int rd, rs;
+    str >> rd >> rs;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    if (rs < 0 || rs > 3) {
+        return -1;
+    }
+    int inst = 6;
+    inst = inst << 11 | rd << 9 | rs << 6;
+    return inst;
 }
 
-int Assembler::ㅅxor(std::istringstream &) {
-    return 0;
+int Assembler::andi(std::istringstream & str) {
+    int rd, constant;
+    str >> rd >> constant;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    if (constant < -128 || constant > 127) {
+        return -1;
+    }
+    int inst = 6;
+    inst = inst << 11 | rd << 9 | 1 << 8 | (0x000000ff & constant);
+    return inst;
 }
 
-int Assembler::xori(std::istringstream &) {
-    return 0;
+int Assembler::ㅅxor(std::istringstream & str) {
+    int rd, rs;
+    str >> rd >> rs;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    if (rs < 0 || rs > 3) {
+        return -1;
+    }
+    int inst = 7;
+    inst = inst << 11 | rd << 9 | rs << 6;
+    return inst;
 }
 
-int Assembler::ㅅcompl(std::istringstream &) {
-    return 0;
+int Assembler::xori(std::istringstream & str) {
+    int rd, constant;
+    str >> rd >> constant;
+    if (rd < 0 || rd > 3){
+        return -1;
+    }
+    if (constant < -128 || constant > 127){
+        return -1;
+    }
+    int inst = 7;
+    inst = inst << 11 | rd << 9 | 1 << 8 | (0x000000ff & constant);
+    return inst;
 }
 
-int Assembler::shl(std::istringstream &) {
-    return 0;
+int Assembler::ㅅcompl(std::istringstream & str) {
+    int rd;
+    str >> rd;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    int inst = 8;
+    inst = inst << 11 | rd << 9;
+    return inst;
 }
 
-int Assembler::shla(std::istringstream &) {
-    return 0;
+int Assembler::shl(std::istringstream & str) {
+    int rd;
+    str >> rd;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    int inst = 9;
+    inst = inst << 11 | rd << 9;
+    return inst;
 }
 
-int Assembler::shr(std::istringstream &) {
-    return 0;
+int Assembler::shla(std::istringstream & str) {
+    int rd;
+    str >> rd;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    int inst = 10;
+    inst = inst << 11 | rd << 9;
+    return inst;
 }
 
-int Assembler::shra(std::istringstream &) {
-    return 0;
+int Assembler::shr(std::istringstream & str) {
+    int rd;
+    str >> rd;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    int inst = 11;
+    inst = inst << 11 | rd << 9;
+    return inst;
 }
 
-int Assembler::compr(std::istringstream &) {
-    return 0;
+int Assembler::shra(std::istringstream & str) {
+    int rd;
+    str >> rd;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    int inst = 12;
+    inst = inst << 11 | rd << 9;
+    return inst;
 }
 
-int Assembler::compri(std::istringstream &) {
-    return 0;
+int Assembler::compr(std::istringstream & str) {
+    int rd, rs;
+    str >> rd >> rs;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    if (rs < 0 || rs > 3) {
+        return -1;
+    }
+    int inst = 13;
+    inst = inst << 11 | rd << 9 | rs << 6;
+    return inst;
 }
 
-int Assembler::getstat(std::istringstream &) {
-    return 0;
+int Assembler::compri(std::istringstream & str) {
+    int rd, constant;
+    str >> rd >> constant;
+    if (rd < 0 || rd > 3){
+        return -1;
+    }
+    if (constant < -128 || constant > 127){
+        return -1;
+    }
+    int inst = 13;
+    inst = inst << 11 | rd << 9 | 1 << 8 | (0x000000ff & constant);
+    return inst;
 }
 
-int Assembler::putstat(std::istringstream &) {
-    return 0;
+int Assembler::getstat(std::istringstream & str) {
+    int rd;
+    str >> rd;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    int inst = 14;
+    inst = inst << 11 | rd << 9;
+    return inst;
 }
 
-int Assembler::jump(std::istringstream &) {
-    return 0;
+int Assembler::putstat(std::istringstream & str) {
+    int rd;
+    str >> rd;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    int inst = 15;
+    inst = inst << 11 | rd << 9;
+    return inst;
 }
 
-int Assembler::jumpl(std::istringstream &) {
-    return 0;
+int Assembler::jump(std::istringstream & str) {
+    int addr;
+    str >> addr;
+    if (addr < 0 || addr > 255) {
+        return -1;
+    }
+    int inst = 16;
+    inst = inst << 11 | 1 << 8 | addr;
+    return inst;
 }
 
-int Assembler::jumpe(std::istringstream &) {
-    return 0;
+int Assembler::jumpl(std::istringstream & str) {
+    int addr;
+    str >> addr;
+    if (addr < 0 || addr > 255) {
+        return -1;
+    }
+    int inst = 17;
+    inst = inst << 11 | 1 << 8 | addr;
+    return inst;
 }
 
-int Assembler::jumpg(std::istringstream &) {
-    return 0;
+int Assembler::jumpe(std::istringstream & str) {
+    int addr;
+    str >> addr;
+    if (addr < 0 || addr > 255) {
+        return -1;
+    }
+    int inst = 18;
+    inst = inst << 11 | 1 << 8 | addr;
+    return inst;
 }
 
-int Assembler::call(std::istringstream &) {
-    return 0;
+int Assembler::jumpg(std::istringstream & str) {
+    int addr;
+    str >> addr;
+    if (addr < 0 || addr > 255) {
+        return -1;
+    }
+    int inst = 19;
+    inst = inst << 11 | 1 << 8 | addr;
+    return inst;
 }
 
-int Assembler::ㅅreturn(std::istringstream &) {
-    return 0;
+int Assembler::call(std::istringstream & str) {
+    int addr;
+    str >> addr;
+    if (addr < 0 || addr > 255) {
+        return -1;
+    }
+    int inst = 20;
+    inst = inst << 11 | 1 << 8 | addr;
+    return inst;
 }
 
-int Assembler::read(std::istringstream &) {
-    return 0;
+int Assembler::ㅅreturn(std::istringstream & str) {
+    int inst = 21;
+    inst = inst << 11;
+    return inst;
 }
 
-int Assembler::write(std::istringstream &) {
-    return 0;
+int Assembler::read(std::istringstream & str) {
+    int rd;
+    str >> rd;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    int inst = 22;
+    inst = inst << 11 | rd << 9;
+    return inst;
 }
 
-int Assembler::halt(std::istringstream &) {
-    return 0;
+int Assembler::write(std::istringstream & str) {
+    int rd;
+    str >> rd;
+    if (rd < 0 || rd > 3) {
+        return -1;
+    }
+    int inst = 23;
+    inst = inst << 11 | rd << 9;
+    return inst;
 }
 
-int Assembler::noop(std::istringstream &) {
-    return 0;
+int Assembler::halt(std::istringstream & str) {
+    int inst = 24;
+    inst = inst << 11;
+    return inst;
 }
 
+int Assembler::noop(std::istringstream & str) {
+    int inst = 25;
+    inst = inst << 11;
+    return inst;
+}
