@@ -3,6 +3,9 @@
 //
 
 #include "Assembler.h"
+#include <iomanip>
+#include <sstream>
+#include <iostream>
 
 Assembler::Assembler() {
     jumpTable["load"] = &Assembler::load;
@@ -16,11 +19,11 @@ Assembler::Assembler() {
     jumpTable["subi"] = &Assembler::subi;
     jumpTable["subc"] = &Assembler::subc;
     jumpTable["subci"] = &Assembler::subci;
-    jumpTable["ㅅand"] = &Assembler::ㅅand;
+    jumpTable["_and"] = &Assembler::_and;
     jumpTable["andi"] = &Assembler::andi;
-    jumpTable["ㅅxor"] = &Assembler::ㅅxor;
+    jumpTable["_xor"] = &Assembler::_xor;
     jumpTable["xori"] = &Assembler::xori;
-    jumpTable["ㅅcompl"] = &Assembler::ㅅcompl;
+    jumpTable["_compl"] = &Assembler::_compl;
     jumpTable["shl"] = &Assembler::shl;
     jumpTable["shla"] = &Assembler::shla;
     jumpTable["shr"] = &Assembler::shr;
@@ -34,7 +37,7 @@ Assembler::Assembler() {
     jumpTable["jumpe"] = &Assembler::jumpe;
     jumpTable["jumpg"] = &Assembler::jumpg;
     jumpTable["call"] = &Assembler::call;
-    jumpTable["ㅅreturn"] = &Assembler::ㅅreturn;
+    jumpTable["_return"] = &Assembler::_return;
     jumpTable["read"] = &Assembler::read;
     jumpTable["write"] = &Assembler::write;
     jumpTable["halt"] = &Assembler::halt;
@@ -231,7 +234,7 @@ int Assembler::subci(std::istringstream & str) {
 
 }
 
-int Assembler::ㅅand(std::istringstream & str) {
+int Assembler::_and(std::istringstream & str) {
     int rd, rs;
     str >> rd >> rs;
     if (rd < 0 || rd > 3) {
@@ -259,7 +262,7 @@ int Assembler::andi(std::istringstream & str) {
     return inst;
 }
 
-int Assembler::ㅅxor(std::istringstream & str) {
+int Assembler::_xor(std::istringstream & str) {
     int rd, rs;
     str >> rd >> rs;
     if (rd < 0 || rd > 3) {
@@ -287,7 +290,7 @@ int Assembler::xori(std::istringstream & str) {
     return inst;
 }
 
-int Assembler::ㅅcompl(std::istringstream & str) {
+int Assembler::_compl(std::istringstream & str) {
     int rd;
     str >> rd;
     if (rd < 0 || rd > 3) {
@@ -447,7 +450,7 @@ int Assembler::call(std::istringstream & str) {
     return inst;
 }
 
-int Assembler::ㅅreturn(std::istringstream & str) {
+int Assembler::_return(std::istringstream & str) {
     int inst = 21;
     inst = inst << 11;
     return inst;

@@ -17,11 +17,7 @@ public:
     typedef int (Assembler::*FP)(std::istringstream &); //function pointer
     std::map<std::string, FP> jumpTable;
     Assembler();//constructor
-
-
     int assemble(std::fstream&, std::fstream&);
-
-private:
     int load(std::istringstream &);
     int loadi(std::istringstream &);
     int store(std::istringstream &);
@@ -33,11 +29,11 @@ private:
     int subi(std::istringstream &);
     int subc(std::istringstream &);
     int subci(std::istringstream &);
-    int ㅅand(std::istringstream &);
+    int _and(std::istringstream &);
     int andi(std::istringstream &);
-    int ㅅxor(std::istringstream &);
+    int _xor(std::istringstream &);
     int xori(std::istringstream &);
-    int ㅅcompl(std::istringstream &);
+    int _compl(std::istringstream &);
     int shl(std::istringstream &);
     int shla(std::istringstream &);
     int shr(std::istringstream &);
@@ -51,7 +47,7 @@ private:
     int jumpe(std::istringstream &);
     int jumpg(std::istringstream &);
     int call(std::istringstream &);
-    int ㅅreturn(std::istringstream &);
+    int _return(std::istringstream &);
     int read(std::istringstream &);
     int write(std::istringstream &);
     int halt(std::istringstream &);
