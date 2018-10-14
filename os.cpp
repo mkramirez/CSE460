@@ -1,6 +1,9 @@
 #include "Assembler.h"
 #include "VirtualMachine.h"
-
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <cstdlib>
 
 int main(int argc, char *argv[]) {
     Assembler as;
