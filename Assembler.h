@@ -13,9 +13,9 @@ public:
 };
 
 class Assembler {
-public:
     typedef int (Assembler::*FP)(std::istringstream &); //function pointer
     std::map<std::string, FP> jumpTable;
+public:
     Assembler();//constructor
     int assemble(std::fstream&, std::fstream&);
     int load(std::istringstream &);

@@ -19,11 +19,11 @@ Assembler::Assembler() {
     jumpTable["subi"] = &Assembler::subi;
     jumpTable["subc"] = &Assembler::subc;
     jumpTable["subci"] = &Assembler::subci;
-    jumpTable["_and"] = &Assembler::_and;
+    jumpTable["and"] = &Assembler::_and;
     jumpTable["andi"] = &Assembler::andi;
-    jumpTable["_xor"] = &Assembler::_xor;
+    jumpTable["xor"] = &Assembler::_xor;
     jumpTable["xori"] = &Assembler::xori;
-    jumpTable["_compl"] = &Assembler::_compl;
+    jumpTable["compl"] = &Assembler::_compl;
     jumpTable["shl"] = &Assembler::shl;
     jumpTable["shla"] = &Assembler::shla;
     jumpTable["shr"] = &Assembler::shr;
@@ -37,7 +37,7 @@ Assembler::Assembler() {
     jumpTable["jumpe"] = &Assembler::jumpe;
     jumpTable["jumpg"] = &Assembler::jumpg;
     jumpTable["call"] = &Assembler::call;
-    jumpTable["_return"] = &Assembler::_return;
+    jumpTable["return"] = &Assembler::_return;
     jumpTable["read"] = &Assembler::read;
     jumpTable["write"] = &Assembler::write;
     jumpTable["halt"] = &Assembler::halt;
@@ -89,7 +89,7 @@ int Assembler::load(std::istringstream & str) {
         return -1;
     }
     int inst = 0;
-    inst = inst | rd << 9 | addr;
+    inst = inst << 11 | rd << 9 | addr;
     return inst;
 }
 
@@ -103,7 +103,7 @@ int Assembler::loadi(std::istringstream & str) {
         return -1;
     }
     int inst = 0;
-    inst = inst | rd << 9 | 1 << 8 | (0x000000ff & constant);
+    inst = inst << 11 | rd << 9 | 1 << 8 | (0x000000ff & constant);
     return inst;
 }
 
