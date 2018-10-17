@@ -1,4 +1,7 @@
-
+/*
+ * The virtual machine header is built here with the use of the contructors being created
+ * as well as creating a function to get the clock timer and run the VM
+ */
 #ifndef PHASE_1_VIRTUALMACHINE_H
 #define PHASE_1_VIRTUALMACHINE_H
 
@@ -9,7 +12,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-class VirtualMachine {
+class VirtualMachine { //all of the class constructors for VM
     int msize;
     int rsize;
     std::vector<int> r;

@@ -1,9 +1,23 @@
+/*fetch the pc out of the memory
+ * Format #1
+ * opcode is sitting in the bits 11-15 the opcode is ir&0xf800 and you are "shitfing it" 11 times 0->10
+ * RD is sitting 9-10 opcode is (ir&0x600) 9 times
+ * i is sitting at 8
+ * rs is sitting at 7-6
+ * 0-5 is unused
+ *
+ * Format #2
+ * opcode is sitting in 11-15
+ * RD 9-10
+ * i is at 8
+ * Addr/Const 7-0
+ *
+ * the class virtual machine is the logic for every instruction
+ * this class will build and execute every instruction
+ * below the opcode is evaluated and the following instructions are performed for each opcode
+*/
 #include <sstream>
 #include "VirtualMachine.h"
-
-//fetch the pc out of the memory
-//opcode is sitting in the bits 11-15 the opcode is ir&0xf800 and you are "shitfing it" 11 times 0->10
-//RD is sitting 9-10 opcode is (ir&0x600) 9 times
 
 void VirtualMachine::run(std::fstream& objectCode, std::fstream& in, std::fstream& out) {
     const int debug = false;
@@ -25,7 +39,8 @@ void VirtualMachine::run(std::fstream& objectCode, std::fstream& in, std::fstrea
         constant = addr;
         if (ir & 0x80) constant |= 0xffffff00; // if neg sign extend
 
-        clock++;
+        clock++; //implement the clock and +1 for every iteration
+        //for the following code instructions are executed
 
         if (opcode == 0) { /* load and loadi */
             if (i) {
@@ -123,11 +138,9 @@ void VirtualMachine::run(std::fstream& objectCode, std::fstream& in, std::fstrea
             }
         }
         else if (opcode == 8) { //compl
-            //r[RD] = ~ r[RD]
             r[rd] = ~r[rd];
         }
         else if (opcode == 9) { //shl
-            //r[RD] = r[RD] << 1, shift-in-bit = 0
             r[rd] = r[rd] << 1;
             r[0] = 0;
             // set CARRY
@@ -296,7 +309,7 @@ void VirtualMachine::run(std::fstream& objectCode, std::fstream& in, std::fstrea
                     sp = msize;
                 }
             }
-            clock = +3;
+            clock += 3;
         }
         else if (opcode == 22) { //read
             //read new content of r[RD] from .in file
@@ -309,10 +322,6 @@ void VirtualMachine::run(std::fstream& objectCode, std::fstream& in, std::fstrea
         else if (opcode == 23) { //write
             //write r[RD] into .out file
             out << r[rd] << std::endl;
-            out << r[0] << std::endl;
-            out << r[1] << std::endl;
-            out << r[2] << std::endl;
-            out << r[3] << std::endl;
             clock += 27;
         }
         else if (opcode == 24) { //halt
@@ -326,7 +335,7 @@ void VirtualMachine::run(std::fstream& objectCode, std::fstream& in, std::fstrea
             std::cout << "Bad opcode = " << opcode << std::endl;
             exit(3);
         }
-        if (debug) //for debugging
+        if (debug) //for debugging add ! infront of debug
         {
             printf("ir=%d op=%d rd=%d i=%d rs=%d const=%d addr=%d\n", ir, opcode, rd, i, rs, constant, addr);
             printf("r[0]=%d r[1]=%d r[2]=%d r[3]=%d pc=%d sr=%d sp=%d clock=%d\n\n", r[0], r[1], r[2], r[3], pc, sr, sp,
@@ -334,7 +343,7 @@ void VirtualMachine::run(std::fstream& objectCode, std::fstream& in, std::fstrea
             //char c;
             //cin>>c;
         }
-        if (debug) {
+        if (debug) { //for debugging add ! infront of debug
             for (j = 0; j < limit; j++) {
                 printf("%8d", mem[j]);
                 if ((j % 8) == 7) printf("\n");
